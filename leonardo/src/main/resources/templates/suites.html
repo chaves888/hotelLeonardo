@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Suítes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+<div class="d-flex">
+    <!-- Incluir o menu -->
+    <div th:replace="~{menu.html}"></div>
+
+    <div class="container mt-5"> <!-- Aqui adicionei a margem superior -->
+        <h2 class="mb-4"><i class="fas fa-door-open"></i> Lista de Suítes</h2>
+
+        <!-- Botão que abre o modal -->
+        <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalSuite">
+            <i class="fas fa-plus"></i> Nova Suíte
+        </button>
+
+        <!-- Tabela de Suítes -->
+        <table class="table table-hover table-striped">
+            <thead>
+            <tr>
+                <th><i class="fas fa-bed"></i> Nome</th>
+                <th><i class="fas fa-align-left"></i> Descrição</th>
+                <th><i class="fas fa-dollar-sign"></i> Preço</th>
+                <th><i class="fas fa-cogs"></i> Ações</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="suite : ${suites}">
+                <td th:text="${suite.nome}"></td>
+                <td th:text="${suite.descricao}"></td>
+                <td>R$ <span th:text="${#numbers.formatDecimal(suite.preco, 1, 'COMMA', 2, 'POINT')}"></span></td>
+                <td>
+                    <button
+                            type="button"
+                            class="btn btn-warning btn-sm me-1 btn-editar"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalSuite"
+                            th:data-id="${suite.id}"
+                            th:data-nome="${suite.nome}"
+                            th:data-descricao="${suite.descricao}"
+                            th:data-preco="${suite.preco}">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <a th:href="@{'/suites/excluir/' + ${suite.id}}" class="btn btn-danger btn-sm"
+                       onclick="return confirm('Deseja realmente excluir esta suíte?');">
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal de Cadastro/Edição de Suíte -->
+<div class="modal fade" id="modalSuite" tabindex="-1" aria-labelledby="modalSuiteLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="/suites" id="suiteForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalSuiteLabel"><i class="fas fa-door-open"></i> Cadastro de Suíte</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="suiteId">
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-bed"></i> Nome</label>
+                        <input type="text" class="form-control" name="nome" id="suiteNome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-align-left"></i> Descrição</label>
+                        <textarea class="form-control" name="descricao" id="suiteDescricao" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-dollar-sign"></i> Preço</label>
+                        <input type="number" step="0.01" class="form-control" name="preco" id="suitePreco" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i class="fas fa-times"></i> Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("modalSuite");
+        const nomeInput = document.getElementById("suiteNome");
+        const descInput = document.getElementById("suiteDescricao");
+        const precoInput = document.getElementById("suitePreco");
+        const idInput = document.getElementById("suiteId");
+
+        const editarBtns = document.querySelectorAll(".btn-editar");
+
+        editarBtns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                nomeInput.value = btn.getAttribute("data-nome");
+                descInput.value = btn.getAttribute("data-descricao");
+                precoInput.value = btn.getAttribute("data-preco");
+                idInput.value = btn.getAttribute("data-id");
+            });
+        });
+
+        modal.addEventListener('hidden.bs.modal', () => {
+            nomeInput.value = "";
+            descInput.value = "";
+            precoInput.value = "";
+            idInput.value = "";
+        });
+    });
+</script>
+</body>
+</html>

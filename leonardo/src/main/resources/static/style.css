@@ -1,0 +1,33 @@
+body {
+    background-color: #f4f6f5;
+    font-family: Arial, sans-serif;
+}
+.content {
+    margin: auto;
+    max-width: 700px;
+    width: 100%;
+}
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+.btn-custom {
+    background-color: #2e7d32;
+    color: white;
+    font-weight: 500;
+    border-radius: 30px;
+}
+.btn-custom:hover {
+    background-color: #256428;
+}
+.hotel-header {
+    background-color: #2e7d32;
+    color: white;
+    padding: 20px 30px;
+    border-radius: 15px 15px 0 0;
+    text-align: center;
+}
+.hotel-header h1 {
+    margin: 0;
+}
